@@ -14,7 +14,8 @@
 {
     [self mergeSort];
     [self fibonacci:6];
-    
+    NSLog(@"%d", [self fibRecurs:6]);
+
     return YES;
 }
 
@@ -62,6 +63,15 @@
         fib[i] = @([fib[i - 1] intValue] + [fib[i - 2] intValue]);
     }
     NSLog(@"%d", [fib[n] intValue]);
+}
+
+- (int)fibRecurs:(int)n {
+    if (n == 0)
+        return 0;
+    if (n == 1)
+        return 1;
+    
+    return [self fibRecurs:n - 2] + [self fibRecurs:n - 1];
 }
 
 @end
