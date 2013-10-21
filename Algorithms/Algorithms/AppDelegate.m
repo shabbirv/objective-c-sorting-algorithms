@@ -13,6 +13,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self mergeSort];
+    [self fibonacci:6];
     
     return YES;
 }
@@ -51,6 +52,16 @@
     }
     
     NSLog(@"%@", merged);
+}
+
+- (void)fibonacci:(int)n {
+    NSMutableArray *fib = [NSMutableArray array];
+    fib[0] = @(0);
+    fib[1] = @(1);
+    for (int i = 2; i <= n; i ++) {
+        fib[i] = @([fib[i - 1] intValue] + [fib[i - 2] intValue]);
+    }
+    NSLog(@"%d", [fib[n] intValue]);
 }
 
 @end
