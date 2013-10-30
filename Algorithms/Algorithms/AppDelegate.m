@@ -12,11 +12,48 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    /////////////////////////////////////
+    //Algorithms
+    /////////////////////////////////////
+    
+    //Merge Sort
     [self mergeSort];
+    
+    //Fibonacci sequenece iterative
     [self fibonacci:6];
+    
+    //Fibonacci Sequence Recursive
     NSLog(@"%d", [self fibRecurs:6]);
-
+    
+    //Check if all characters in the string are unique
+    if ([self uniqueCharacters:@"hello"]) {
+        NSLog(@"Unique");
+    } else {
+        NSLog(@"Not unique");
+    }
+    
+    //Checks if two strings are anagrams of each other
+    if (anagrams(@"armxy", @"marys")) {
+        NSLog(@"Are anagrams");
+    } else {
+        NSLog(@"Not anagrams");
+    }
+    
     return YES;
+}
+
+- (BOOL)uniqueCharacters:(NSString *)string {
+    BOOL set[256];
+    for (int i = 0; i < 256; i++){
+        set[i] = NO;
+    }
+    for (int i = 0; i < string.length; i++) {
+        int num = [string characterAtIndex:i];
+        if (set[num] == TRUE) return FALSE;
+        
+        set[num] = TRUE;
+    }
+    return TRUE;
 }
 
 - (void)mergeSort {
@@ -73,5 +110,77 @@
     
     return [self fibRecurs:n - 2] + [self fibRecurs:n - 1];
 }
+
+BOOL anagrams(NSString *a, NSString *b)
+{
+    if (a.length != b.length)
+        return NO;
+    
+    NSCountedSet *aSet = [[NSCountedSet alloc] init];
+    NSCountedSet *bSet = [[NSCountedSet alloc] init];
+    
+    for (int i = 0; i < a.length; i++)
+    {
+        [aSet addObject:@([a characterAtIndex:i])];
+        [bSet addObject:@([b characterAtIndex:i])];
+    }
+    
+    return [aSet isEqual:bSet];
+}
+
+- (char)firstNonRepeated:(NSString *)string {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    for (int i = 0; i < string.length; i++) {
+        char c = [string characterAtIndex:i];
+        int num = [dict[@(c)] intValue];
+        dict[@(c)] = @(num + 1);
+    }
+    for (int i = 0; i < string.length; i++) {
+        char c = [string characterAtIndex:i];
+        int num = [dict[@(c)] intValue];
+        if (num == 1)
+            return c;
+    }
+    return '\0';
+}
+
+- (void)reverseString:(NSString *)string {
+    NSMutableArray *reversed = [NSMutableArray array];
+    NSArray *array = [string componentsSeparatedByString:@" "];
+    for (int i = 0; i < array.count; i++) {
+        [reversed addObject:array[(array.count - 1) - i]];
+    }
+    NSString *reversedString = [reversed componentsJoinedByString:@" "];
+    NSLog(@"%@", reversedString);
+}
+
+BOOL anagram(NSString *a, NSString *b) {
+    
+    if (a.length != b.length)
+        return NO;
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    
+    for (int i = 0; i < a.length; i++) {
+        char c1 = [a characterAtIndex:i];
+        int num = [dict[@(c1)] intValue];
+        dict[@(c1)] = @(num + 1);
+    }
+    
+    for (int i = 0; i < b.length; i++) {
+        char c2 = [b characterAtIndex:i];
+        int num = [dict[@(c2)] intValue];
+        dict[@(c2)] = @(num - 1);
+    }
+    
+    for (NSNumber *i in dict.allKeys) {
+        char c = i.charValue;
+        if ([dict[@(c)] intValue] != 0)
+            return NO;
+    }
+    
+    return YES;
+}
+
 
 @end
