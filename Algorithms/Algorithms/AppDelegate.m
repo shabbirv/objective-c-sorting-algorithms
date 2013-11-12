@@ -17,7 +17,7 @@
     /////////////////////////////////////
     
     //Merge Sort
-    [self mergeSort];
+    [self merge];
     
     //Fibonacci sequenece iterative
     [self fibonacci:6];
@@ -26,14 +26,14 @@
     NSLog(@"%d", [self fibRecurs:6]);
     
     //Check if all characters in the string are unique
-    if ([self uniqueCharacters:@"hello"]) {
+    if ([self hasUniqueCharacters:@"hello"]) {
         NSLog(@"Unique");
     } else {
         NSLog(@"Not unique");
     }
     
     //Checks if two strings are anagrams of each other
-    if (anagrams(@"armxy", @"marys")) {
+    if (anagrams(@"army", @"mary")) {
         NSLog(@"Are anagrams");
     } else {
         NSLog(@"Not anagrams");
@@ -54,6 +54,63 @@
         set[num] = TRUE;
     }
     return TRUE;
+}
+
+- (BOOL)hasUniqueCharacters:(NSString *)string {
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	for (int i = 0; i < string.length; i++) {
+		char c = [string characterAtIndex:i];
+		int num = [dict[@(c)] intValue];
+		dict[@(c)] = @(num + 1);
+	}
+    
+	for (int i = 0; i < string.length; i++) {
+		char c = [string characterAtIndex:i];
+		int num = [dict[@(c)] intValue];
+		if (num > 1)
+			return FALSE;
+	}
+    
+	return TRUE;
+    
+}
+
+- (void)merge {
+	NSMutableArray *array1 = [NSMutableArray arrayWithArray:@[@(1), @(12), @(3), @(15), @(4)]];
+	NSMutableArray *array2 = [NSMutableArray arrayWithArray:@[@(5), @(4), @(3), @(2), @(9)]];
+	[array1 sortUsingSelector:@selector(compare:)];
+	[array2 sortUsingSelector:@selector(compare:)];
+    
+	NSMutableArray *merged = [NSMutableArray array];
+	int a = 0;
+	int b = 0;
+	while (a < array1.count && b < array2.count) {
+		if (array1[a] < array2[b]) {
+			[merged addObject:array1[a]];
+			a++;
+		} else if (array1[a] > array2[b]) {
+			[merged addObject:array2[b]];
+			b++;
+		} else {
+			[merged addObject:array1[a]];
+			[merged addObject:array2[b]];
+			a++;
+			b++;
+		}
+	}
+    
+	while (a < array1.count) {
+		[merged addObject:array1[a]];
+		a++;
+	}
+    
+	while (b < array2.count) {
+		[merged addObject:array1[b]];
+		b++;
+	}
+    
+	NSLog(@"%@", merged);
+    
 }
 
 - (void)mergeSort {
@@ -111,21 +168,34 @@
     return [self fibRecurs:n - 2] + [self fibRecurs:n - 1];
 }
 
-BOOL anagrams(NSString *a, NSString *b)
-{
-    if (a.length != b.length)
-        return NO;
+
+BOOL anagrams(NSString *a, NSString *b) {
+	if (a.length != b.length)
+		return NO;
     
-    NSCountedSet *aSet = [[NSCountedSet alloc] init];
-    NSCountedSet *bSet = [[NSCountedSet alloc] init];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	NSUInteger length = a.length;
+	for (int i = 0; i < length; i++) {
+		char c = [a characterAtIndex:i];
+		int num = [dict[@(c)] intValue];
+		dict[@(c)] = @(num + 1);
+	}
     
-    for (int i = 0; i < a.length; i++)
-    {
-        [aSet addObject:@([a characterAtIndex:i])];
-        [bSet addObject:@([b characterAtIndex:i])];
-    }
+	for (int i = 0; i < length; i++) {
+		char c = [b characterAtIndex:i];
+		int num = [dict[@(c)] intValue];
+		dict[@(c)] = @(num - 1);
+	}
     
-    return [aSet isEqual:bSet];
+	for (NSNumber *charNum in dict.allKeys) {
+		char c = charNum.charValue;
+		int num = [dict[@(c)] intValue];
+		if (num != 0)
+			return NO;
+	}
+    
+    
+	return YES;
 }
 
 - (char)firstNonRepeated:(NSString *)string {
