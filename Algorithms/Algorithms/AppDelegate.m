@@ -39,7 +39,32 @@
         NSLog(@"Not anagrams");
     }
     
+    //Adds two integers represented as strings
+    addTwoStrings(@"100", @"5000");
+    
     return YES;
+}
+
+void addTwoStrings(NSString *first, NSString *second) {
+    NSString *resultString = @"";
+    int remainder = 0;
+    for (int i = 0; i < MAX(first.length, second.length); i++) {
+        int secondNum = 0;
+        int firstNum = 0;
+        int result = 0;
+        if (i < first.length) {
+            firstNum = [[first substringWithRange:NSMakeRange((first.length - 1) - i, 1)] intValue];
+        }
+        if (i < second.length) {
+            secondNum = [[second substringWithRange:NSMakeRange((second.length - 1) - i, 1)] intValue];
+        }
+        int x = firstNum + secondNum + remainder;
+        result = x % 10;
+        remainder = x / 10;
+        resultString = [NSString stringWithFormat:@"%d%@", result, resultString];
+        
+    }
+    NSLog(@"%@", resultString);
 }
 
 - (BOOL)uniqueCharacters:(NSString *)string {
